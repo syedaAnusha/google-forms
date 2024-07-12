@@ -49,6 +49,26 @@
             "option 1",
             "option 2"
           ]
+        },
+        {
+          "choice": "mcqs",
+          "description": "",
+          "subTitle": "bckjsdbckd",
+          "required": false,
+          "values": [
+            "alag",
+            "chiiii"
+          ]
+        },
+        {
+          "choice": "checkbox",
+          "description": "",
+          "subTitle": "ncsdcksd",
+          "required": false,
+          "values": [
+            "cbsdkcsd",
+            "scnkjsdncksd"
+          ]
         }
       ]
     }

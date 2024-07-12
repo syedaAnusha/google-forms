@@ -29,12 +29,22 @@ const FieldComponent: React.FC = () => {
     setNum(event.target.value as string);
   };
 
+  const handleOptionChange = (id: number, newValue: string) => {
+    setOptions(
+      options.map((option) =>
+        option.id === id
+          ? { ...option, value: newValue, label: newValue }
+          : option
+      )
+    );
+  };
+
   const addOption = () => {
     const newOptionIndex = options.length + 1;
     setOptions([
       ...options,
       {
-        value: ``,
+        value: `option ${newOptionIndex}`,
         label: `Option ${newOptionIndex}`,
         id: Math.random(),
       },
@@ -133,6 +143,9 @@ const FieldComponent: React.FC = () => {
                   <Box
                     component="div"
                     contentEditable="true"
+                    onBlur={(e) =>
+                      handleOptionChange(option.id, e.currentTarget.innerText)
+                    }
                     sx={{
                       display: "flex",
                       alignItems: "center",
@@ -180,9 +193,11 @@ const FieldComponent: React.FC = () => {
                   }}
                 >
                   <Box
-                    key={option.id}
                     component="div"
                     contentEditable="true"
+                    onBlur={(e) =>
+                      handleOptionChange(option.id, e.currentTarget.innerText)
+                    }
                     sx={{ display: "flex", alignItems: "center" }}
                   >
                     <FormControlLabel
