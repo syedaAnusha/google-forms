@@ -10,6 +10,9 @@ const SubmitPage = () => {
   function goToPreview() {
     navigate(`/PreviewPage/${id}`);
   }
+  function goToHome() {
+    navigate(`/`);
+  }
 
   return (
     <Container>
@@ -17,13 +20,22 @@ const SubmitPage = () => {
         <Typography variant="h1" gutterBottom>
           Hi i am response
         </Typography>
-        <Button
-          onClick={goToPreview}
-          type="submit"
-          sx={{ paddingInline: "2rem", bgcolor: "lightblue", color: "black" }}
-        >
-          Submit another response
-        </Button>
+        <Box sx={{ display: "flex", gap: "1rem" }}>
+          <Button
+            onClick={goToPreview}
+            type="submit"
+            sx={{ paddingInline: "2rem", bgcolor: "lightblue", color: "black" }}
+          >
+            Submit another response
+          </Button>
+          <Button
+            onClick={goToHome}
+            type="submit"
+            sx={{ paddingInline: "2rem", bgcolor: "lightblue", color: "black" }}
+          >
+            Go to Home
+          </Button>
+        </Box>
       </Box>
     </Container>
   );

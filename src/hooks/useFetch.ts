@@ -3,22 +3,26 @@ import { useState, useEffect } from "react";
 
 interface UseFetchResult {
   data: any | null;
+  response: any | null;
 }
 
 const useFetch = (url: string): UseFetchResult => {
   const [data, setData] = useState<any | null>(null);
+  const [response, setResponse] = useState<any | null>(null);
 
   useEffect(() => {
     setTimeout(() => {
       fetch(url)
         .then((res) => {
           if (!res.ok) {
-            throw Error("Error fetching users data");
+            throw new Error("Error fetching data");
           }
           return res.json();
         })
         .then((data) => {
           setData(data);
+          const resp = data.map((item: any) => item.responses);
+          setResponse(resp);
         })
         .catch((err) => {
           console.log(err);
@@ -26,7 +30,7 @@ const useFetch = (url: string): UseFetchResult => {
     }, 1000);
   }, [url]);
 
-  return { data };
+  return { data, response };
 };
 
 export default useFetch;

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import FormPage from "./pages/FormPage";
 import PreviewPage from "./pages/PreviewPage";
 import SubmitPage from "./pages/SubmitPage";
+import ViewPage from "./pages/ViewPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/forms/:id" element={<FormPage />} />
           <Route path="/PreviewPage/:id" element={<PreviewPage />} />
           <Route path="/SubmitPage/:id" element={<SubmitPage />} />
+          <Route path="/ViewPage" element={<ViewPage />} />
         </Routes>
       </BrowserRouter>
     </>

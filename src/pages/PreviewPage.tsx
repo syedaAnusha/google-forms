@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useState } from "react";
 import {
   Container,
   Box,
@@ -20,20 +20,46 @@ const PreviewPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: form } = useFetch(`http://localhost:3001/forms/${id}`);
 
+  const [responses, setResponses] = useState<any>({});
+
   if (!form) {
     return <Typography variant="body1">Loading...</Typography>;
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    goToResponse();
-    // Implement form submission logic here
-    console.log("Form submitted:", form);
+  const handleInputChange = (field: any, value: any) => {
+    setResponses((prevResponses: any) => ({
+      ...prevResponses,
+      [field.subTitle]: value,
+    }));
   };
 
-  function goToResponse() {
-    navigate(`/SubmitPage/${id}`);
-  }
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const userResponse = {
+      formId: id,
+      title: form.title,
+      responses,
+    };
+
+    try {
+      const response = await fetch(`http://localhost:3001/userResponse`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userResponse),
+      });
+
+      if (response.ok) {
+        console.log("User response saved successfully!");
+        navigate(`/SubmitPage/${id}`);
+      } else {
+        console.error("Failed to save user response.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <Container>
@@ -55,10 +81,15 @@ const PreviewPage: React.FC = () => {
                   fullWidth
                   required={field.required}
                   inputProps={{ style: { fontSize: 16 } }}
+                  onChange={(e) => handleInputChange(field, e.target.value)}
                 />
               )}
               {field.choice === "mcqs" && (
-                <RadioGroup aria-label={field.subTitle} name={field.subTitle}>
+                <RadioGroup
+                  aria-label={field.subTitle}
+                  name={field.subTitle}
+                  onChange={(e) => handleInputChange(field, e.target.value)}
+                >
                   {field.values.map((option: string, optionIndex: number) => (
                     <FormControlLabel
                       key={optionIndex}
@@ -76,6 +107,9 @@ const PreviewPage: React.FC = () => {
                       key={optionIndex}
                       control={<Checkbox />}
                       label={option}
+                      onChange={(e) =>
+                        handleInputChange(field, e.target ? option : null)
+                      }
                     />
                   ))}
                 </FormGroup>
