@@ -10,7 +10,7 @@ export default function CreateNewFormButton() {
   };
 
   const handleCreateForm = async () => {
-    const newId = generateRandomId();
+    const newId = String(generateRandomId());
     const newForm = { id: newId };
 
     try {
