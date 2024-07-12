@@ -1,22 +1,28 @@
-import { Container, TextField, Box, Typography } from "@mui/material";
+//* React Router, MUI, XLSX Imports
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+
+//* Custom Hooks
+import useFetch from "../../hooks/useFetch";
+
+import { Container, TextField, Box, Typography } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import { useParams } from "react-router-dom";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import Radio from "@mui/material/Radio";
 import Button from "@mui/material/Button";
 import RadioGroup from "@mui/material/RadioGroup";
 import Checkbox from "@mui/material/Checkbox";
-import useFetch from "../../hooks/useFetch";
 
 const FieldComponent: React.FC = () => {
+  const Mobile = useMediaQuery("(min-width:300px)");
   const { id } = useParams<{ id: string }>();
   const { data: forms } = useFetch("http://localhost:3001/forms");
-  const [num, setNum] = useState<string>("");
+  const [num, setNum] = useState<string>("1");
   const [req, setReq] = useState<boolean>(false);
   const [fieldTitle, setFieldTitle] = useState<string>("");
   const [formTitle, setFormTitle] = useState<string>("");
@@ -56,8 +62,10 @@ const FieldComponent: React.FC = () => {
   };
 
   const saved = async () => {
-    if (!fieldTitle.length && req) {
+    if (!formTitle.length) {
       return;
+    } else {
+      alert("Field added successfully!!");
     }
 
     try {
@@ -117,11 +125,6 @@ const FieldComponent: React.FC = () => {
               sx={{ width: "60%" }}
               inputProps={{ style: { fontSize: 25 } }}
             />
-            {!fieldTitle.length && req && (
-              <Typography variant="h6" component="h6" sx={{ color: "red" }}>
-                Field must be filled!
-              </Typography>
-            )}
           </>
         );
       case "2":
@@ -142,7 +145,7 @@ const FieldComponent: React.FC = () => {
                 >
                   <Box
                     component="div"
-                    contentEditable="true"
+                    contentEditable={true}
                     onBlur={(e) =>
                       handleOptionChange(option.id, e.currentTarget.innerText)
                     }
@@ -155,6 +158,7 @@ const FieldComponent: React.FC = () => {
                       value={option.value}
                       control={<Radio />}
                       label={option.label}
+                      sx={{ padding: ".3rem" }}
                     />
                   </Box>
                   <Button
@@ -203,6 +207,7 @@ const FieldComponent: React.FC = () => {
                     <FormControlLabel
                       control={<Checkbox />}
                       label={option.label}
+                      sx={{ padding: ".3rem" }}
                     />
                   </Box>
                   <Button
@@ -244,7 +249,7 @@ const FieldComponent: React.FC = () => {
           padding: "1rem",
           display: "flex",
           flexDirection: "column",
-          width: "50%",
+          width: Mobile ? "100%" : "50%",
         }}
       >
         <Box
@@ -270,6 +275,11 @@ const FieldComponent: React.FC = () => {
               onChange={(e) => setFormTitle(e.target.value)}
               inputProps={{ style: { fontSize: 25 } }}
             />
+            {!formTitle.length && (
+              <Typography variant="h6" component="h6" sx={{ color: "red" }}>
+                Field must be filled!
+              </Typography>
+            )}
           </form>
           <Box mt={2}>
             <FormControl fullWidth>
@@ -277,6 +287,7 @@ const FieldComponent: React.FC = () => {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={num}
+                defaultValue="1"
                 onChange={handleChange}
               >
                 <MenuItem value="1">Short Answer</MenuItem>
@@ -298,15 +309,17 @@ const FieldComponent: React.FC = () => {
         )}
 
         <Button
-          variant="text"
+          variant="contained"
           sx={{
-            padding: "1rem",
+            padding: ".4rem",
             width: "fit-content",
             marginRight: "0rem",
+            marginTop: "1rem",
+            fontSize: "12px",
           }}
           onClick={saved}
         >
-          Save
+          Add Field to Google Form
         </Button>
       </Box>
     </Container>

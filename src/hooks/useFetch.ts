@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+//* useFetch to GET data
 import { useState, useEffect } from "react";
 
 interface UseFetchResult {

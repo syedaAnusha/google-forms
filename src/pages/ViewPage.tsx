@@ -1,11 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+//* React Imports
 import React from "react";
-import { Container, Box, Typography } from "@mui/material";
-import useFetch from "../hooks/useFetch";
-import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import useFetch from "../hooks/useFetch";
+
+//* MUI Imports
+import { Container, Box, Typography } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import Button from "@mui/material/Button";
 
 const ViewResponse: React.FC = () => {
+  const Mobile = useMediaQuery("(min-width:300px)");
+
   const navigate = useNavigate();
   const { response: responses } = useFetch(
     "http://localhost:3001/userResponse"
@@ -23,7 +29,11 @@ const ViewResponse: React.FC = () => {
   return (
     <Container>
       <Box my={4}>
-        <Typography variant="h2" gutterBottom>
+        <Typography
+          variant="h2"
+          gutterBottom
+          sx={{ fontSize: Mobile ? "18px" : "20px" }}
+        >
           Total Responses: {totalResponses}
         </Typography>
         {responses.map((response: any, index: number) => (
@@ -36,7 +46,7 @@ const ViewResponse: React.FC = () => {
           >
             <Typography variant="subtitle1">Response {index + 1}</Typography>
             <Box ml={2}>
-              {Object.entries(response).map(([key, value]) => (
+              {Object.entries(response).map(([key, value]: any) => (
                 <Typography key={key} variant="body1">
                   {key} {value}
                 </Typography>
@@ -48,7 +58,7 @@ const ViewResponse: React.FC = () => {
           variant="contained"
           color="success"
           sx={{
-            padding: "1rem",
+            padding: Mobile ? ".5rem" : "1rem",
           }}
           onClick={GoBack}
         >

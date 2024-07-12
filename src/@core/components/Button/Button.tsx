@@ -1,3 +1,5 @@
+//* React Router, MUI, XLSX Imports
+
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -11,12 +13,15 @@ export default function CreateNewFormButton() {
     "http://localhost:3001/userResponse"
   );
 
+  //* to generate random unique ID
   const generateRandomId = (): number => {
     return Math.floor(Math.random() * 1000000);
   };
   const viewResponse = () => {
     navigate("/ViewPage");
   };
+
+  //* Method to download JSON file in Excel sheets
   const viewInSheets = () => {
     if (responses) {
       const worksheet = XLSX.utils.json_to_sheet(responses);

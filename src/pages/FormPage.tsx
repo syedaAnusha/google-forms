@@ -1,10 +1,15 @@
+//* React Imports
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Container, TextField, Button, Box } from "@mui/material";
-import FieldComponent from "../@core/components/FieldComponent";
 import useFetch from "../hooks/useFetch";
 
+//* MUI Imports
+import { Container, TextField, Button, Box } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import FieldComponent from "../@core/components/FieldComponent";
+
 const CreateForm: React.FC = () => {
+  const Mobile = useMediaQuery("(min-width:300px)");
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: forms } = useFetch("http://localhost:3001/forms");
@@ -87,7 +92,7 @@ const CreateForm: React.FC = () => {
             variant="standard"
             margin="normal"
             placeholder="Add Title"
-            sx={{ width: "60%" }}
+            sx={{ width: Mobile ? "100%" : "60%" }}
             required={true}
             onChange={(e) => setTitle(e.target.value)}
             value={title}
@@ -100,6 +105,9 @@ const CreateForm: React.FC = () => {
               variant="contained"
               color="primary"
               onClick={handleAddField}
+              sx={{
+                fontSize: "10px",
+              }}
             >
               Add Field
             </Button>
