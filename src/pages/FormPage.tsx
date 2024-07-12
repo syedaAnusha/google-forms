@@ -7,13 +7,18 @@ import FieldComponent from "../@core/components/FieldComponent";
 const CreateForm: React.FC = () => {
   //   const { id } = useParams();
   const [fields, setFields] = useState<number[]>([]);
+  const [title, setTitle] = useState<string>("");
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic
   };
 
   const handleAddField = () => {
-    setFields([...fields, fields.length]);
+    if (!title.length) {
+      return;
+    } else {
+      setFields([...fields, fields.length]);
+    }
   };
   return (
     <Container>
@@ -25,6 +30,9 @@ const CreateForm: React.FC = () => {
             margin="normal"
             placeholder="Add Title"
             sx={{ width: "60%" }}
+            required={true}
+            onChange={(e) => setTitle(e.target.value)}
+            value={title}
             inputProps={{ style: { fontSize: 25 } }}
           />
 

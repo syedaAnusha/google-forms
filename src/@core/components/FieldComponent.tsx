@@ -1,4 +1,4 @@
-import { Container, TextField, Box } from "@mui/material";
+import { Container, TextField, Box, Typography } from "@mui/material";
 import { useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
@@ -13,7 +13,8 @@ import Checkbox from "@mui/material/Checkbox";
 
 const FieldComponent: React.FC = () => {
   const [num, setNum] = useState<string>("");
-
+  const [req, setReq] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>("");
   const handleChange = (event: SelectChangeEvent) => {
     setNum(event.target.value as string);
   };
@@ -39,18 +40,35 @@ const FieldComponent: React.FC = () => {
     setOptions(options.filter((option) => option.id !== idToRemove));
   };
 
+  const saved = () => {
+    if (!title.length && req) {
+      return;
+    }
+  };
+
   const renderField = () => {
     switch (num) {
       case "1":
         return (
-          <TextField
-            id="short-answer"
-            variant="standard"
-            margin="normal"
-            placeholder="Short Answer"
-            sx={{ width: "60%" }}
-            inputProps={{ style: { fontSize: 25 } }}
-          />
+          <>
+            <TextField
+              id="short-answer"
+              variant="standard"
+              margin="normal"
+              placeholder="Short Answer"
+              onChange={(e) => setTitle(e.target.value)}
+              value={title}
+              sx={{ width: "60%" }}
+              inputProps={{ style: { fontSize: 25 } }}
+            />
+            {!title.length && req && (
+              <>
+                <Typography variant="h6" component="h6" sx={{ color: "red" }}>
+                  field must be filled!
+                </Typography>
+              </>
+            )}
+          </>
         );
       case "2":
         return (
@@ -188,6 +206,7 @@ const FieldComponent: React.FC = () => {
               margin="normal"
               placeholder="Add Title"
               fullWidth
+              required={req}
               inputProps={{ style: { fontSize: 25 } }}
             />
           </form>
@@ -210,7 +229,7 @@ const FieldComponent: React.FC = () => {
         <Box mt={2}>{renderField()}</Box>
         <FormGroup>
           <FormControlLabel
-            control={<Switch defaultChecked />}
+            control={<Switch onClick={() => setReq((req) => !req)} />}
             label="required"
           />
         </FormGroup>
@@ -221,6 +240,7 @@ const FieldComponent: React.FC = () => {
             width: "fit-content",
             marginRight: "0rem",
           }}
+          onClick={saved}
         >
           Save
         </Button>
