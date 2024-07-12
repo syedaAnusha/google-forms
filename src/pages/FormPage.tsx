@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Container, TextField, Button, Box } from "@mui/material";
 import FieldComponent from "../@core/components/FieldComponent";
 import useFetch from "../hooks/useFetch";
 
 const CreateForm: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { data: forms } = useFetch("http://localhost:3001/forms");
   const [fields, setFields] = useState<number[]>([]);
   const [title, setTitle] = useState<string>("");
@@ -62,8 +63,23 @@ const CreateForm: React.FC = () => {
     }
   };
 
+  function goToPreview() {
+    navigate(`/PreviewPage/${id}`);
+  }
+
   return (
     <Container>
+      <Button
+        variant="text"
+        sx={{
+          padding: "1rem",
+          width: "fit-content",
+          marginRight: "0rem",
+        }}
+        onClick={goToPreview}
+      >
+        Preview
+      </Button>
       <Box my={4}>
         <form onSubmit={handleSubmit}>
           <TextField
