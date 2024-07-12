@@ -34,7 +34,7 @@ const FieldComponent: React.FC = () => {
     setOptions([
       ...options,
       {
-        value: `option ${newOptionIndex}`,
+        value: ``,
         label: `Option ${newOptionIndex}`,
         id: Math.random(),
       },
@@ -60,18 +60,18 @@ const FieldComponent: React.FC = () => {
 
       const form = forms.find((form: { id: string }) => form.id === id);
 
-      const formField = {
-        choice:
-          num === "1" ? "text" : num === "2" ? "Multiple Choice" : "Checkboxes",
-        description: fieldTitle,
-        subTitle: formTitle,
-        required: req,
-        values: num === "1" ? [] : options.map((option) => option.label),
-      };
-
       const updatedForm = {
         ...form,
-        countForComp: [...(form.countForComp || []), formField],
+        countForComp: [
+          ...(form.countForComp || []),
+          {
+            choice: num === "1" ? "text" : num === "2" ? "mcqs" : "checkbox",
+            description: fieldTitle,
+            subTitle: formTitle,
+            required: num === "1" ? req : false,
+            values: options.map((option) => option.value),
+          },
+        ],
       };
 
       const response = await fetch(`http://localhost:3001/forms/${id}`, {
@@ -273,12 +273,15 @@ const FieldComponent: React.FC = () => {
         </Box>
 
         <Box mt={2}>{renderField()}</Box>
-        <FormGroup>
-          <FormControlLabel
-            control={<Switch onClick={() => setReq((req) => !req)} />}
-            label="required"
-          />
-        </FormGroup>
+        {num === "1" && (
+          <FormGroup>
+            <FormControlLabel
+              control={<Switch onClick={() => setReq((req) => !req)} />}
+              label="required"
+            />
+          </FormGroup>
+        )}
+
         <Button
           variant="text"
           sx={{
