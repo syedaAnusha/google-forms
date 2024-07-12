@@ -19,11 +19,10 @@ const PreviewPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { data: form } = useFetch(`http://localhost:3001/forms/${id}`);
-
   const [responses, setResponses] = useState<any>({});
 
   if (!form) {
-    return <Typography variant="body1">Loading...</Typography>;
+    return <Typography variant="body1">Loading~~~</Typography>;
   }
 
   const handleInputChange = (field: any, value: any) => {
@@ -32,7 +31,9 @@ const PreviewPage: React.FC = () => {
       [field.subTitle]: value,
     }));
   };
-
+  const GoBack = () => {
+    navigate(-1);
+  };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const userResponse = {
@@ -60,74 +61,95 @@ const PreviewPage: React.FC = () => {
       console.error("Error:", error);
     }
   };
+  if (!form.title) {
+    return (
+      <>
+        <Typography variant="body1">No Response Found</Typography>
+        <Button
+          variant="contained"
+          color="success"
+          sx={{
+            padding: "1rem",
+          }}
+          onClick={GoBack}
+        >
+          Go Back
+        </Button>
+      </>
+    );
+  } else {
+    return (
+      <Container>
+        <Box my={4}>
+          <form onSubmit={handleSubmit}>
+            <Typography variant="h2" gutterBottom>
+              {form.title}
+            </Typography>
 
-  return (
-    <Container>
-      <Box my={4}>
-        <form onSubmit={handleSubmit}>
-          <Typography variant="h2" gutterBottom>
-            {form.title}
-          </Typography>
+            {form.countForComp.map((field: any, index: number) => (
+              <Box key={index} my={2}>
+                <Typography variant="h5">{field.subTitle}</Typography>
+                {field.choice === "text" && (
+                  <TextField
+                    id={`text-field-${index}`}
+                    variant="standard"
+                    margin="normal"
+                    placeholder={field.description}
+                    fullWidth
+                    required={field.required}
+                    inputProps={{ style: { fontSize: 16 } }}
+                    onChange={(e) => handleInputChange(field, e.target.value)}
+                  />
+                )}
+                {field.choice === "mcqs" && (
+                  <RadioGroup
+                    aria-label={field.subTitle}
+                    name={field.subTitle}
+                    onChange={(e) => handleInputChange(field, e.target.value)}
+                  >
+                    {field.values.map((option: string, optionIndex: number) => (
+                      <FormControlLabel
+                        key={optionIndex}
+                        value={option}
+                        control={<Radio />}
+                        label={option}
+                      />
+                    ))}
+                  </RadioGroup>
+                )}
+                {field.choice === "checkbox" && (
+                  <FormGroup>
+                    {field.values.map((option: string, optionIndex: number) => (
+                      <FormControlLabel
+                        key={optionIndex}
+                        control={<Checkbox />}
+                        label={option}
+                        onChange={(e) =>
+                          handleInputChange(field, e.target ? option : null)
+                        }
+                      />
+                    ))}
+                  </FormGroup>
+                )}
+              </Box>
+            ))}
 
-          {form.countForComp.map((field: any, index: number) => (
-            <Box key={index} my={2}>
-              <Typography variant="h5">{field.subTitle}</Typography>
-              {field.choice === "text" && (
-                <TextField
-                  id={`text-field-${index}`}
-                  variant="standard"
-                  margin="normal"
-                  placeholder={field.description}
-                  fullWidth
-                  required={field.required}
-                  inputProps={{ style: { fontSize: 16 } }}
-                  onChange={(e) => handleInputChange(field, e.target.value)}
-                />
-              )}
-              {field.choice === "mcqs" && (
-                <RadioGroup
-                  aria-label={field.subTitle}
-                  name={field.subTitle}
-                  onChange={(e) => handleInputChange(field, e.target.value)}
-                >
-                  {field.values.map((option: string, optionIndex: number) => (
-                    <FormControlLabel
-                      key={optionIndex}
-                      value={option}
-                      control={<Radio />}
-                      label={option}
-                    />
-                  ))}
-                </RadioGroup>
-              )}
-              {field.choice === "checkbox" && (
-                <FormGroup>
-                  {field.values.map((option: string, optionIndex: number) => (
-                    <FormControlLabel
-                      key={optionIndex}
-                      control={<Checkbox />}
-                      label={option}
-                      onChange={(e) =>
-                        handleInputChange(field, e.target ? option : null)
-                      }
-                    />
-                  ))}
-                </FormGroup>
-              )}
-            </Box>
-          ))}
-
-          <Typography variant="body1">{form.description}</Typography>
-          <Button
-            type="submit"
-            sx={{ paddingInline: "2rem", bgcolor: "lightblue", color: "black" }}
-          >
-            Submit
-          </Button>
-        </form>
-      </Box>
-    </Container>
-  );
+            <Typography variant="body1">{form.description}</Typography>
+            <Button
+              type="submit"
+              sx={{
+                paddingInline: "2rem",
+                bgcolor: "lightblue",
+                color: "black",
+              }}
+            >
+              Submit
+            </Button>
+          </form>
+        </Box>
+      </Container>
+    );
+  }
 };
 
 export default PreviewPage;

@@ -18,7 +18,7 @@ const SubmitPage = () => {
     <Container>
       <Box my={4}>
         <Typography variant="h1" gutterBottom>
-          Hi i am response
+          Responses Submitted
         </Typography>
         <Box sx={{ display: "flex", gap: "1rem" }}>
           <Button
